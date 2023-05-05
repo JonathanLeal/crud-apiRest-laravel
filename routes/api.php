@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PersonaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,3 +18,5 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::get('/personas/list', [PersonaController::class, 'obtenerPersonas']);
+Route::get('/personas/{id}', [PersonaController::class, 'obtenerPersonaPorId']);
