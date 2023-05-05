@@ -20,3 +20,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::get('/personas/list', [PersonaController::class, 'obtenerPersonas']);
 Route::get('/personas/{id}', [PersonaController::class, 'obtenerPersonaPorId']);
+Route::post('/personas/save', [PersonaController::class, 'guardarPersona']);
