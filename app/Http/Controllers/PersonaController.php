@@ -55,4 +55,46 @@ class PersonaController extends Controller
         DB::commit();
         return http::respuesta(http::retOK, "Persona guardada correctamente");
     }
+
+    public function editarPersona(Request $request){
+        $idPersona = Persona::find($request->id);
+        if (!$idPersona) {
+            return http::respuesta(http::retNotFound, "no se encontro el ID");
+        }
+        $validator = Validator::make($request->all(), [
+            'nombre' => 'required|string',
+            'apellido' => 'required|string',
+            'edad' => 'required|integer|min:1',
+            'identificacion' => 'required|identificacion|unique:personas,identificacion',
+            'ocupacion' => 'required|string'
+        ]);
+
+        if ($validator->fails()) {
+            return http::respuesta(http::retError, $validator->errors());
+        }
+
+        DB::beginTransaction();
+        try {
+            $idPersona->nombre = $request->nombre;
+            $idPersona->apellido = $request->apellido;
+            $idPersona->edad = $request->edad;
+            $idPersona->identificacion = $request->identificacion;
+            $idPersona->ocupacion = $request->ocupacion;
+            $idPersona->save();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return http::respuesta(http::retError, ['error cacth:' => $th->getMessage()]);
+        }
+        DB::commit();
+        return http::respuesta(http::retOK, "Persona editada correctamente");
+    }
+
+    public function eliminarPersona(Request $request){
+        $idPersona = Persona::find($request->id);
+        if (!$idPersona) {
+            return http::respuesta(http::retNotFound, "no se encontro el ID");
+        }
+        $idPersona->delete();
+        return http::respuesta(http::retOK, "eliminado correctamente");
+    }
 }
